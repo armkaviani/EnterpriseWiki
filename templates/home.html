@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container mt-4">
+        <h1>Welcome to MyWiki</h1>
+        <p>Your go-to source for documentation and knowledge.</p>
+
+        <h2>Available Wiki Articles:</h2>
+        <ul class="list-group">
+            {% for item in items %}
+                <li class="list-group-item">
+                    <a href="{{ item.url }}">{{ item.title }}</a>
+                </li>
+            {% else %}
+                <li class="list-group-item">No articles available.</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+{% endblock content %}
