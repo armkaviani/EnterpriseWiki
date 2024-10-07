@@ -34,3 +34,13 @@ class Post(db.Model):
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
 
+
+class Img(db.Model):
+    __tablename__ = 'img'
+    id = db.Column(db.Integer, primary_key=True)
+    img_data = db.Column(db.LargeBinary, unique=True, nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    mimetype = db.Column(db.String(255), nullable=False)
+
+    def __repr__(self):
+        return f"Img('{self.name}', '{self.img_data}')"

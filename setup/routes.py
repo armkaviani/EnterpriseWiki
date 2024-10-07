@@ -1,9 +1,10 @@
 from setup.__init__ import enterprise_wiki, db
 from setup import bcrypt
-from flask import render_template, request, redirect, url_for, flash
-from setup.forms import RegisrationForm, LoginForm
+from flask import render_template, request, redirect, url_for, flash, abort
+from setup.forms import RegisrationForm, LoginForm, PostForm, UploadForm
 from setup.models import Users, Post
 from flask_login import login_user, login_required, current_user, logout_user
+import os
 
 
 @login_required
@@ -58,12 +59,60 @@ def logout():
     return redirect(url_for('home'))
 
 
-@enterprise_wiki.route('/account')
+@enterprise_wiki.route('/post/new', methods=['GET', 'POST'])
 @login_required
-def account():
-    image_file = current_user.image_file
-    return render_template('account.html', title='Account', image_file=image_file)
+def create_new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post has been created!', 'success')
+        return redirect(url_for('daily_posts'))
+    return render_template('create_post.html', title='New Post', form=form)
 
 
+@enterprise_wiki.route("/daily_posts")
+@login_required
+def daily_posts():
+    posts = Post.query.all()
+    return render_template('daily_posts.html', title='Daily Posts', posts=posts)
+
+
+@enterprise_wiki.route("/post/<int:post_id>")
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('post.html', title=post.title, post=post)
+
+
+@enterprise_wiki.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def edit_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('Your post has been edited!', 'success')
+        return redirect(url_for('daily_posts', post_id=post.id))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.content
+    return render_template('edit_post.html', title='Edit Post', legend='Edit Post', form=form)
+
+
+@enterprise_wiki.route("/post/<int:post_id>/delete", methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('daily_posts'))
 
 

@@ -28,3 +28,13 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Post', validators=[DataRequired()])
+
+
+class UploadForm(FlaskForm):
+    pic = FileField('Upload Picture', validators=[DataRequired()])
+    submit = SubmitField('Upload')

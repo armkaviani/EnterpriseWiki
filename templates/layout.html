@@ -28,7 +28,7 @@
                                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                                     <span class="navbar-toggler-icon"></span>
                                 </button>
-
+                            <a class="nav-item nav-link" href="{{ url_for('daily_posts') }}">Daily Posts</a>
 
                         </div>
                         </div>
@@ -37,18 +37,18 @@
                 <ul class="navbar-nav mr-auto">
 
                         <ul class="navbar-nav">
-
-                        {% if current_user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('account') }}">Account</a>
-                            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-                        </li>
-                        {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                        </li>
-                        {% endif %}
-                    </li>
+                            <a class="nav-link" href="{{ url_for('create_new_post') }}">New Post</a>
+                            {% if current_user.is_authenticated %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url_for('account') }}">Account</a>
+                                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                                </li>
+                            {% endif %}
+                        </ul>
                 </ul>
             </div>
         </div>
