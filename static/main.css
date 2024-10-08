@@ -79,15 +79,20 @@ body {
 
 .btn-file,
 .btn-upload{
-  font-size: 0.7rem; /* Adjust the font size as needed */
-  padding: 0.25rem 0.7rem; /* Adjust the padding as needed */
+  font-size: 0.4rem; /* Adjust the font size as needed */
+  padding: 0.2rem 0.5rem; /* Adjust the padding as needed */
 }
 
 .btn-save-picture {
-  font-size: 0.7rem; /* Adjust the font size as needed */
-  padding: 0.25rem 0.7rem; /* Adjust the padding as needed */
+  font-size: 0.4rem; /* Adjust the font size as needed */
+  padding: 0.2rem 0.5rem; /* Adjust the padding as needed */
 }
 
 .btn-save-picture {
   background-color: #ba1cad
+}
+
+.img-small {
+    width: 50px; /* Adjust the width as needed */
+    height: 50px; /* Maintain aspect ratio */
 }

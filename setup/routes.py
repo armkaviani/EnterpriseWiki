@@ -1,10 +1,13 @@
 from setup.__init__ import enterprise_wiki, db
 from setup import bcrypt
 from flask import render_template, request, redirect, url_for, flash, abort
-from setup.forms import RegisrationForm, LoginForm, PostForm, UploadForm
+from setup.forms import RegisrationForm, LoginForm, PostForm, UploadForm, SearchForm
 from setup.models import Users, Post
 from flask_login import login_user, login_required, current_user, logout_user
 import os
+import logging
+from werkzeug.utils import secure_filename
+from sqlalchemy import or_
 
 
 @login_required
@@ -20,6 +23,70 @@ def home():
     ]
 
     return render_template('home.html', items=wiki_items)
+
+
+UPLOAD_FOLDER = '/Users/masoud/projects/EnterpriseWiki/setup/static/uploaded_pics'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@enterprise_wiki.route('/upload_pic', methods=['POST'])
+@login_required
+def upload_pic():
+    logging.info("Attempting to upload picture")
+    if 'pic' in request.files:
+        pic = request.files['pic']
+        print(pic, "where are there?")
+        if pic.filename != '':
+            if allowed_file(pic.filename):
+                filename = secure_filename(pic.filename)
+                pic.save(os.path.join(UPLOAD_FOLDER, filename))
+                current_user.image_file = filename  # Update the user's image filename
+                db.session.commit()
+
+                flash('Image uploaded and saved successfully', 'success')
+                logging.info("Picture uploaded and saved successfully")
+            else:
+                flash('Invalid file type', 'error')
+                logging.error("Invalid file type")
+        else:
+            flash('No file selected', 'error')
+            logging.error("No file selected")
+    else:
+        flash('File field not found in request', 'error')
+        logging.error("File field not found in request")
+
+    return redirect(url_for('account'))
+
+
+@enterprise_wiki.route('/save_pic', methods=['POST'])
+@login_required
+def save_pic():
+    logging.info("Attempting to save picture")
+    if 'pic' in request.files:
+        pic = request.files['pic']
+        if pic.filename != '':
+            if allowed_file(pic.filename):
+                filename = secure_filename(pic.filename)
+                pic.save(os.path.join(UPLOAD_FOLDER, filename))
+                current_user.image_file = filename
+                db.session.commit()
+                flash('Image uploaded and changes saved successfully', 'success')
+                logging.info("Picture saved successfully")
+    return redirect(url_for('account'))
+
+
+@enterprise_wiki.route('/account')
+@login_required
+def account():
+    form = UploadForm()
+    image_file = current_user.image_file
+    return render_template('account.html', title='Account', image_file=image_file, form=form)
 
 
 @enterprise_wiki.route('/register', methods=['GET', 'POST'])
@@ -114,5 +181,28 @@ def delete_post(post_id):
     db.session.commit()
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('daily_posts'))
+
+
+
+#Pass Stuff to Navbar
+@enterprise_wiki.context_processor
+def layout():
+    form = SearchForm()
+    return dict(form=form)
+
+
+@enterprise_wiki.route("/search", methods=['POST'])
+@login_required
+def search():
+    search_query = request.form.get('searched').lower()  # Convert search query to lowercase for case-insensitive searc
+
+    # Search for posts containing the query
+    posts = Post.query.filter(or_(Post.content.ilike(f'%{search_query}%'), Post.title.ilike(f'%{search_query}%')))
+    posts = posts.order_by(Post.title).all()
+
+    return render_template('search.html', searched=search_query, posts=posts)
+
+
+
 
 

@@ -35,12 +35,20 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav mr-auto">
-
+                    <li class="nav-item">
+                        <form class="form-inline" method="Post" action="{{url_for('search')}}">
+                            {{ form.hidden_tag() }}
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search", name="searched">
+                            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+                        </form>
+                    </li>
                         <ul class="navbar-nav">
                             <a class="nav-link" href="{{ url_for('create_new_post') }}">New Post</a>
                             {% if current_user.is_authenticated %}
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ url_for('account') }}">Account</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                                 </li>
                             {% else %}

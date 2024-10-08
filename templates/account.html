@@ -4,10 +4,10 @@
 <div class="content-section">
     <div class="media">
         <!-- Display profile picture within rounded circle -->
-        <div class="col-auto">
-            <img id="profile-img" class="account-img rounded-circle" src="{% if current_user.image_file %}{{ url_for('static', filename='uploaded_pics/' + current_user.image_file) }}{% endif %}" style="max-width: 150px; max-height: 150px;">
+        <div class="col-auto" style="margin-bottom: 20px;">
+            <img id="profile-img" class="account-img rounded-circle" src="{% if current_user.image_file %}{{ url_for('static', filename='uploaded_pics/' + current_user.image_file) }}{% endif %}" style="max-width: 100px; max-height: 100px;">
         </div>
-        <div class="col-auto">
+        <div class="col-auto" style="margin-left: 20px;">
             <h2 class="account-heading">{{ current_user.username }}</h2>
             <p class="text-secondary">{{ current_user.email }}</p>
         </div>
@@ -17,15 +17,15 @@
         {{ form.hidden_tag() }}
         <div class="btn-toolbar">
             <input type="file" id="file-input" name="pic" accept="image/*" style="display: none;">
-            <input type="button" value="Choose File" onclick="document.getElementById('file-input').click();" class="btn btn-primary btn-file">
-            <input type="button" value="Upload" onclick="uploadImage()" class="btn btn-success btn-upload">
+            <input type="button" value="Choose File" onclick="document.getElementById('file-input').click();" class="btn btn-primary btn-file" style="margin-right: 10px;">
+            <input type="button" value="Upload" onclick="uploadImage()" class="btn btn-success btn-upload" style="margin-right: 10px;">
         </div>
     </form>
     <!-- Save Picture -->
     <form id="save-form" method="POST" action="{{ url_for('save_pic') }}" class="form-inline">
         {{ form.hidden_tag() }}
         <input type="hidden" name="pic" value="{{ current_user.image_file }}" >
-        <input type="submit" value="Save Picture" class="btn btn-primary btn-save-picture">
+        <input type="submit" value="Save Picture" class="btn btn-primary btn-save-picture" style="margin-top: 10px;">
     </form>
 
 </div>

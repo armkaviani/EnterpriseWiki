@@ -1,6 +1,6 @@
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, FileField
 from setup.models import Users
 
 
@@ -38,3 +38,9 @@ class PostForm(FlaskForm):
 class UploadForm(FlaskForm):
     pic = FileField('Upload Picture', validators=[DataRequired()])
     submit = SubmitField('Upload')
+
+
+class SearchForm(FlaskForm):
+    searched = StringField('Searched', validators=[DataRequired()])
+    submit = SubmitField('Login')
+
