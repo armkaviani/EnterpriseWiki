@@ -14,15 +14,13 @@ from sqlalchemy import or_
 @enterprise_wiki.route('/')
 @enterprise_wiki.route('/home')
 def home():
-    # Sample data for demonstration
-    wiki_items = [
-        {"title": "Getting Started", "url": "/wiki/getting-started"},
-        {"title": "Installation", "url": "/wiki/installation"},
-        {"title": "Configuration", "url": "/wiki/configuration"},
-        {"title": "FAQ", "url": "/wiki/faq"},
-    ]
+    return render_template('home.html')
 
-    return render_template('home.html', items=wiki_items)
+
+@enterprise_wiki.route('/get_started')
+@login_required
+def get_started():
+    return render_template('get_started.html')
 
 
 UPLOAD_FOLDER = '/Users/masoud/projects/EnterpriseWiki/setup/static/uploaded_pics'
