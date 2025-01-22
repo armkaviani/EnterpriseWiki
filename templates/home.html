@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center;">
+        <h1>Welcome to My Wiki</h1>
+        <p>Your go-to resource for all things amazing.</p>
+        <p>Use the navigation bar above to explore Daily Posts, manage your Account, and more.</p>
+        <div class="card mt-4 w-75">
+            <div class="card-body text-center">
+                <h2 class="card-title">Getting Started</h2>
+                <p class="card-text">Check out our <a href="{{ url_for('get_started') }}">Get Started Guide</a> to make the most of your wiki.</p>
+            </div>
+        </div>
+        <div class="card mt-4 w-75">
+            <div class="card-body text-center">
+                <h2 class="card-title">Latest Updates</h2>
+                <p class="card-text">Stay up-to-date with the latest posts in our <a href="{{ url_for('daily_posts') }}">Daily Posts</a> section.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
